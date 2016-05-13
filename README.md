@@ -1,3 +1,5 @@
+jQuery 插件实现 百叶窗效果
+
 ﻿1. 使用闭包：
 (function($) {
   // Code goes here
