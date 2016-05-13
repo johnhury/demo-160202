@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>类级别的插件开发</title>
+    <style>
+        *{padding: 0;margin: 0;background: #222;color:#CCC;font-family: "微软雅黑",arial;line-height: 1.5;font-size: 14px;}
+        h1{font-size: 18px;}
+        h2{font-size: 16px;}
+        h3{font-size: 14px;}
+        h4{font-size: 12px;}
+        .box{width: 90%;margin:0 auto;padding:10px;}
+    </style>
+    <script src="jquery.js"></script>
+</head>
+<body>
+<div class="box">
+    <pre>
+    <h1>jQuery插件的开发包括两种：</h1>
+
+    一种是类级别的插件开发，即给jQuery添加新的全局函数，相当于给jQuery类本身添加方法。jQuery的全局函数就是属于jQuery命名空间的函数，另一种是对象级别的插件开发，即给jQuery对象添加方法。下面就两种函数的开发做详细的说明。
+
+    <h2>1、类级别的插件开发</h2>
+
+    类级别的插件开发最直接的理解就是给jQuery类添加类方法，可以理解为添加静态方法。典型的例子就是$.AJAX()这个函数，将函数定义于jQuery的命名空间中。关于类级别的插件开发可以采用如下几种形式进行扩展：
+
+
+    <h3>1.1 添加一个新的全局函数</h3>
+
+    添加一个全局函数，我们只需如下定义：
+
+    Java代码
+    jQuery.foo = function() {    
+    alert('This is a test. This is only a test.');   
+    };
+
+    <a href="#" id="a">This is a test. This is only a test.</a>
+
+    <h3>1.2 增加多个全局函数</h3>
+
+    添加多个全局函数，可采用如下定义：
+
+    Java代码
+    jQuery.foo = function() {    
+    alert('This is a test. This is only a test.');   
+    };   
+    jQuery.bar = function(param) {    
+    alert('This function takes a parameter, which is "' + param + '".');   
+    };    
+    调用时和一个函数的一样的:jQuery.foo();jQuery.bar();或者$.foo();$.bar('bar');  
+
+    <h3>1.3 使用jQuery.extend(object);</h3>
+
+    Java代码
+    jQuery.extend({       
+        foo: function() {       
+        alert('This is a test. This is only a test.');       
+        },       
+        bar: function(param) {       
+        alert('This function takes a parameter, which is "' + param +'".');       
+    }      
+    });
+
+    <h3>1.4 使用命名空间</h3>
+
+    虽然在jQuery命名空间中，我们禁止使用了大量的javaScript函数名和变量名。但是仍然不可避免某些函数或变量名将于其他jQuery插件冲突，因此我们习惯将一些方法封装到另一个自定义的命名空间。
+
+    Java代码
+    jQuery.myPlugin = {           
+        foo:function() {           
+        alert('This is a test. This is only a test.');           
+    },           
+    bar:function(param) {           
+        alert('This function takes a parameter, which is "' + param + '".');     
+    }          
+    };   
+    采用命名空间的函数仍然是全局函数，调用时采用的方法：   
+    $.myPlugin.foo();          
+    $.myPlugin.bar('baz');  
+
+    通过这个技巧（使用独立的插件名），我们可以避免命名空间内函数的冲突。
+
+    <h2>2、对象级别的插件开发</h2>
+
+    对象级别的插件开发需要如下的两种形式：、
+
+    形式1：  
+
+    Java代码
+    (function($){      
+    $.fn.extend({      
+    pluginName:function(opt,callback){      
+              // Our plugin implementation code goes here.        
+    }      
+    })      
+    })(jQuery);  
+
+    形式2：
+
+    Java代码
+    (function($) {        
+    $.fn.pluginName = function() {      
+         // Our plugin implementation code goes here.      
+    };      
+    })(jQuery);      
+           上面定义了一个jQuery函数,形参是$，函数定义完成之后,把jQuery这个实参传递进去.立即调用执行。这样的好处是,我们在写jQuery插件时,也可以使用$这个别名,而不会与prototype引起冲突.
+
+    <h2>3、总结</h2>
+    jQuery为开发插件提拱了两个方法，分别是：
+    jQuery.fn.extend(object);  给jQuery对象添加方法。
+    jQuery.extend(object);  为扩展jQuery类本身.为类添加新的方法。
+    </pre>
+    
+</div>
+</body>
+
+<script>
+(function($){
+
+    $.foo=function(){
+        alert("This is a test. This is only a test.[$.foo]");
+    }
+
+    $.extend({       
+        foo2: function() {       
+        alert('This is a test. This is only a test.');       
+    },       
+        bar: function(param) {       
+        alert('This function takes a parameter, which is "' + param +'".');       
+    }      
+    });
+
+    $("#a").bind("click",function(){
+        $.foo();
+        $.bar("hello");
+    });
+
+})(jQuery);
+</script>
+
+</html>
